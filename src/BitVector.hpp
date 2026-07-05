@@ -55,5 +55,13 @@ public:
         return (blocks[i / 64] >> (i % 64)) & 1;
     }
 
+    // Devuelve todos los bits como vector de 0s y 1s (para serializar/visualizar)
+    vector<uint8_t> get_bits() const {
+        vector<uint8_t> bits(n);
+        for (int i = 0; i < n; i++)
+            bits[i] = (blocks[i / 64] >> (i % 64)) & 1;
+        return bits;
+    }
+
     int size() const { return n; }
 };

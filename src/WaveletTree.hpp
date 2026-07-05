@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <cstring>
+#include <utility>
 
 using namespace std;
 
@@ -115,5 +116,27 @@ public:
 
     int get_sigma() const { return sigma; }
     const string& get_alphabet() const { return alphabet; }
+
+    // --- Accessors para serializacion / visualizacion (no usados en hot path) ---
+
+    // Rango de alfabeto [lo, hi) que cubre el nodo idx
+    pair<int,int> node_alpha_range(int idx) const {
+        return { nodes[idx].alpha_lo, nodes[idx].alpha_hi };
+    }
+
+    // Indice del hijo izquierdo del nodo idx (-1 si es hoja por ese lado)
+    int node_left(int idx) const { return nodes[idx].left_child; }
+
+    // Indice del hijo derecho del nodo idx (-1 si es hoja por ese lado)
+    int node_right(int idx) const { return nodes[idx].right_child; }
+
+    // Bits del bitvector del nodo idx (secuencia de 0s y 1s)
+    vector<uint8_t> node_bits(int idx) const {
+        return nodes[idx].bv.get_bits();
+    }
+
+    // La raiz del arbol siempre es el nodo 0 (si existe)
+    int root() const { return nodes.empty() ? -1 : 0; }
+
     int num_nodes() const { return (int)nodes.size(); }
 };

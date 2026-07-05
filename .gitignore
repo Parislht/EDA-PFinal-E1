@@ -1,0 +1,14 @@
+# Compilados de CMake/CLion
+cmake-build-debug/
+cmake-build-release/
+build/
+
+# Genomas grandes (se descargan aparte, no van al repo)
+data/chr1.fa
+data/chr21.fa
+data/*.gz
+
+# Archivos temporales
+*.o
+*.obj
+*.exe

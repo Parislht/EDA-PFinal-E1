@@ -1,5 +1,6 @@
 #pragma once
 #include "WaveletTree.hpp"
+#include "dc3.hpp"
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -13,12 +14,15 @@ using namespace std;
 // FM-Index: indice comprimido para busqueda de patrones en O(m * log sigma)
 // Combina Suffix Array + BWT + Tabla C + Wavelet Tree
 class FMIndex {
+
     WaveletTree wt;
     vector<int> sa;
     vector<int> C;
     string alphabet;
     int n = 0;
-    int char_idx[256];
+    int char_idx[256];   // texto original reconstruido
+
+
 
     // Suffix Array con prefix doubling, O(n log^2 n)
     // Ordena sufijos comparando pares (rank[i], rank[i+k]) con k = 1, 2, 4,
@@ -47,10 +51,14 @@ class FMIndex {
     }
 
 public:
+
+    enum class SAMethod { PrefixDoubling, DC3 };
+
     FMIndex() { memset(char_idx, -1, sizeof(char_idx)); }
 
     // Construye el indice completo a partir del texto original (sin $)
-    void build(const string& original_text, bool verbose = false) {
+    void build(const string& original_text, bool verbose = false,
+               SAMethod method = SAMethod::DC3) {
         string text = original_text + "$";
         n = (int)text.size();
 
@@ -67,10 +75,15 @@ public:
             cout << "Alfabeto: " << alphabet << " (sigma = " << sigma << ")" << endl;
         }
 
-        // Suffix Array
+        // Suffix Array (elegir metodo)
         auto t0 = chrono::high_resolution_clock::now();
-        if (verbose) cout << "Construyendo Suffix Array ->" << flush;
-        sa = build_sa(text);
+        if (verbose) cout << "Construyendo Suffix Array ("
+                          << (method == SAMethod::DC3 ? "DC3" : "PrefixDoubling")
+                          << ") ->" << flush;
+        if (method == SAMethod::DC3)
+            sa = buildSA_DC3(text);
+        else
+            sa = build_sa(text);
         auto t1 = chrono::high_resolution_clock::now();
         if (verbose)
             cout << " " << chrono::duration<double>(t1 - t0).count() << " s" << endl;
@@ -104,7 +117,7 @@ public:
 
         // Wavelet Tree sobre la BWT
         t0 = chrono::high_resolution_clock::now();
-        if (verbose) cout << end"Construyendo Wavelet Tree ->" << flush;
+        if (verbose) cout << "Construyendo Wavelet Tree ->" << flush;
         wt.build(bwt, alphabet);
         t1 = chrono::high_resolution_clock::now();
         if (verbose) {
@@ -226,4 +239,24 @@ public:
     }
 
     int text_size() const { return n; }
+
+    //Accessors para serializacion
+    const vector<int>& get_sa() const { return sa; }
+    const vector<int>& get_C() const { return C; }
+    const string& get_alphabet() const { return alphabet; }
+    const WaveletTree& wt_ref() const { return wt; }
+
+    // Reconstruye la BWT como string leyendo el Wavelet Tree posicion por posicion.
+    string get_bwt() const {
+        string bwt(n, ' ');
+        for (int i = 0; i < n; i++) bwt[i] = wt.access(i);
+        return bwt;
+    }
+
+    // Indice de un caracter en el alfabeto
+    int char_index(char c) const { return char_idx[(unsigned char)c]; }
+
+    // rank del wavelet tree
+    int wt_rank(int i, char c) const { return wt.rank(i, c); }
+
 };

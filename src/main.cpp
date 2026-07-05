@@ -28,7 +28,7 @@ void test_genome() {
     cout << string(40, '-') << endl;
 
     // Intentar cargar el archivo FASTA del genoma de E. coli
-    string path = "../GCF_000005845.2_ASM584v2_genomic.fna/GCF_000005845.2_ASM584v2_genomic.fna";
+    string path = "../data/GCF_000005845.2_ASM584v2_genomic.fna";
     string text = load_fasta(path);
 
     if (text.empty()) {

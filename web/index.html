@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FM-Index Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>FM-Index + Wavelet Tree — Visualizador</h1>
+    <p class="subtitle">CS3014 Estructura de Datos Avanzados · UTEC 2026-1</p>
+</header>
+
+<section class="controls">
+    <label for="textInput">Cadena a indexar:</label>
+    <input type="text" id="textInput" value="GATAGACA" maxlength="30"
+           placeholder="Ej: GATAGACA">
+    <button id="buildBtn">Construir FM-Index</button>
+    <span id="status"></span>
+</section>
+
+<main id="output" class="hidden">
+    <!-- Buscador (aparece tras construir) -->
+    <section class="panel search-panel">
+        <h2>Buscar patrón (Backward Search)</h2>
+        <p class="hint">Escribe un patrón. La búsqueda procesa los caracteres de derecha a izquierda, acotando el rango [lo, hi) paso a paso.</p>
+        <div class="search-row">
+            <input type="text" id="patternInput" maxlength="15" placeholder="Ej: GA">
+            <button id="searchBtn">Buscar</button>
+            <button id="replayBtn" class="secondary hidden">Repetir animación</button>
+        </div>
+        <div id="stepInfo" class="step-info hidden"></div>
+    </section>
+
+    <!-- Info general -->
+    <section class="panel">
+        <h2>Resumen</h2>
+        <div id="summary"></div>
+    </section>
+
+    <!-- Tabla de sufijos: SA, F, L(=BWT) -->
+    <section class="panel">
+        <h2>Suffix Array + BWT</h2>
+        <p class="hint">Cada fila es un sufijo ordenado. F = primer carácter, L = último (la BWT). Durante la búsqueda, las filas dentro del rango [lo, hi) se resaltan.</p>
+        <div id="suffixTable"></div>
+    </section>
+
+    <!-- Tabla C -->
+    <section class="panel">
+        <h2>Tabla C</h2>
+        <p class="hint">C[c] = número de caracteres en el texto estrictamente menores que c.</p>
+        <div id="tableC"></div>
+    </section>
+
+    <!-- Wavelet Tree -->
+    <section class="panel">
+        <h2>Wavelet Tree</h2>
+        <p class="hint">Cada nodo descompone el alfabeto en dos mitades. Los bits indican a qué lado fue cada carácter.</p>
+        <div id="waveletTree"></div>
+    </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
