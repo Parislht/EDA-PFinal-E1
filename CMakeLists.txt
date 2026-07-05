@@ -9,8 +9,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 include_directories(src third_party)
 
 #Ejecutable 1
-add_executable(ProyectoFinal src/main.cpp
-        src/benchmark_main.cpp)
+add_executable(ProyectoFinal src/main.cpp)
 
 #Ejecutable 2
 add_executable(server src/server_main.cpp)
