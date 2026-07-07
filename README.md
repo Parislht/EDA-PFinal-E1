@@ -7,7 +7,6 @@ Proyecto final de **CS3014 – Estructura de Datos Avanzados**, UTEC 2026-1.
 **Autores:**
 - Joel David Miguel Fernandez – 202310186
 - Paris Lenard Herrera Torres – 202310100
-- Ary Werner Aaron Rojas Durand – 202310366
 
 ---
 
